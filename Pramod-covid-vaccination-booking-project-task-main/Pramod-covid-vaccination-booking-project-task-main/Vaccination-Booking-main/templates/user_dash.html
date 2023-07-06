@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Pramod CovidVaccination-Booking</title>
+
+    <style>
+        /* Light theme styles */
+        body.light {
+            background-color: #b4eafa;
+            color: #000000;
+        }
+
+        /* Dark theme styles */
+        body.dark {
+            background-color: #251c27;
+            color: #ffffff;
+        }
+
+        .navbar {
+            background-color: rgb(84, 16, 110);
+        }
+
+        /* Chat support icon styles */
+        .chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #f54a70;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="light">
+    <!-- Nav Bar Content -->
+    <nav class="navbar navbar-light">
+        <a style="margin-left: 10px;" class="navbar-brand" href="#">
+            <img src="static/logo.svg" alt="logo" width="50" height="50" style="border-radius: 50%;">
+        </a>
+        <span class="mx-auto">
+            <h2>Pramod CovidVaccination Booking</h2>
+        </span>
+    </nav>
+
+    <!-- Light/Dark Toggle Switch -->
+    <div style="margin-left: 50px; border: 3px; border-color: black;" class="form-check form-switch btn-lg">
+        <input style="margin-left: -25px;cursor: pointer;" class="form-check-input" type="checkbox"
+            id="flexSwitchCheckDefault">
+        <br>
+        <label style="margin-left: -50px;cursor: pointer;" class="form-check-label"
+            for="flexSwitchCheckDefault">Light/Dark</label>
+    </div>
+
+    <!-- Log-In, Sign-Up, and Logout Buttons -->
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top:-65px; margin-right: 10px;">
+        {% if show_logout %}
+        <a class="btn btn-primary me-md-2" href="/logout">Logout</a>
+        {% else %}
+        <a class="btn btn-primary me-md-2" href="/login">Log-In</a>
+        <a class="btn btn-primary" href="/signup">Sign-Up</a>
+        {% endif %}
+    </div>
+  
+
+    <!-- Carousel For Images -->
+    <div class="container" style="width:700px; margin-top: -30px;">
+        <div id="carouselExampleInterval" class="carousel carousel-dark slide d-flex justify-content-center"
+            data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active" data-bs-interval="2000">
+                    <img src="/static/slide3.png" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <img src="/static/slide5.png" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <img src="/static/slide6.png" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <img src="/static/slide4.png" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <img src="/static/slide1.png" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item" data-bs-interval="2000">
+                    <img src="/static/slide2.png" class="d-block w-100" alt="...">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Chat support icon -->
+    <div class="chat-icon" onclick="openChat()">
+        <i class="fas fa-comment"></i>
+    </div>
+
+    <br><br>
+    <center><h1>Welcome {{name}}! Book Your Slot!</h1></center>
+
+    <!-- Blog about Vaccine -->
+    <br><br>
+    <div class="clearfix" style="margin-left:10px;">
+        <div >
+            <div class="container">
+                <div class="card  text-center bg-secondary">
+                    <div class="card-header text-white bg-dark ">
+                      <h2>Book Your Slot Today!</h2>
+                    </div>
+                    <div class="card-body text-white bg-secondary mb-3">
+                        <div class="d-grid gap-2 d-md-flex justify-content-center">
+                            <form action="/" method="POST" class="d-grid gap-2 d-md-flex justify-content-center">
+                                <form action="/" method="POST" class="d-grid gap-2 d-md-flex justify-content-center">
+                                    <div class="dropdown">
+                                        <label for="center">Vaccination Center:</label>
+                                        <select name="center" id="center" class="form-select">
+                                            {% for center in vaccination_centers %}
+                                            <option value="{{ center[0] }}">{{ center[0] }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="dropdown">
+                                        <label for="hour">Working Hours:</label>
+                                        <select name="hour" id="hour" class="form-select">
+                                            {% for hour in hours %}
+                                            <option value="{{ hour[0] }}">{{ hour[0] }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <br>
+                                    <button type="submit" class="btn btn-primary">Search Now</button>
+                            </form>
+                        </div>
+                          
+                    </div>
+                    <div class="card-footer">
+                        {% if rows %}
+                        <table class="table table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col">Center Name</th>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">Working Hour</th>
+                                    <th scope="col">Available Slots</th>
+                                    <th scope="col">Book Now</th>
+                                    <!-- Add more columns as needed -->
+                                </tr>
+                            </thead>
+                            <tbody class="table-primary">
+                                {% for row in rows %}
+                                <tr>
+                                    <td>{{ row[3] }}</td>
+                                    <td>{{ row[2] }}</td>
+                                    <td>{{ row[5] }}</td>
+                                    <td id="slots-{{ row[0] }}">{{ row[6] }}</td>
+                                    <td>
+                                        {% if 'user_id' in session %}
+                                            {% if row[6] > 0 %}
+                                            <button type="button" class="btn btn-primary book-button" data-center-id="{{ row[0] }}">Book</button>
+                                            {% else %}
+                                            <button type="button" class="btn btn-secondary" disabled>Booked</button>
+                                            {% endif %}
+                                        {% else %}
+                                        <button type="button" class="btn btn-primary" onclick="alert('Please log in to book your slot')">Book</button>
+                                        {% endif %}
+                                    </td>
+                                    <!-- Add more cells for other columns -->
+                                </tr>
+                                {% endfor %}
+                            </tbody>                            
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+
+    <br><br>
+    <div class="clearfix" style="margin-left:10px;">
+        <div >
+            <div class="container">
+                <div class="card  text-center bg-secondary">
+                    <div class="card-header text-white bg-dark ">
+                      <h2>Your Slot Booking Details!</h2>
+                    </div>
+                    <div class="card-body text-white bg-secondary mb-3">
+                        <div class="d-grid gap-2 d-md-flex justify-content-center">
+                            <p>Your slot details: </p>
+                        </div>
+                          
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <br><br>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var bookButtons = document.querySelectorAll('.book-button');
+            bookButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var centerId = button.getAttribute('data-center-id');
+                    var data = {'center_id': centerId};
+        
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/book-slot', true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                            alert(xhr.responseText);
+                            var slotsCell = document.getElementById('slots-' + centerId);
+                            var slots = parseInt(slotsCell.innerText);
+                            if (slots > 0) {
+                                slotsCell.innerText = slots - 1;
+                                button.setAttribute('disabled', 'disabled');
+                                button.innerText = 'Booked';
+                                button.classList.remove('btn-primary');
+                                button.classList.add('btn-secondary');
+                            }
+                        }
+                    };
+                    xhr.send(JSON.stringify(data));
+                });
+            });
+        });
+        </script>
+    
+    <script>
+        const toggleSwitch = document.querySelector('#flexSwitchCheckDefault');
+        const body = document.querySelector('body');
+
+        // Function to toggle between light and dark themes
+        function toggleTheme() {
+            if (body.classList.contains('light')) {
+                body.classList.remove('light');
+                body.classList.add('dark');
+            } else {
+                body.classList.remove('dark');
+                body.classList.add('light');
+            }
+        }
+
+        // Event listener for the toggle switch
+        toggleSwitch.addEventListener('change', toggleTheme);
+
+        // Function to open the chat support
+        function openChat() {
+            // can put the logic for chat (OpenAI)
+            alert("Open chat support");
+        }
+
+        //to update the text selected in dropdown
+        document.addEventListener("DOMContentLoaded", function() {
+            var dropdownItems = document.querySelectorAll(".dropdown-menu a");
+            dropdownItems.forEach(function(item) {
+                item.addEventListener("click", function() {
+                    var selectedOption = this.textContent;
+                    var dropdownButton = this.closest(".dropdown").querySelector(".dropdown-toggle");
+                    dropdownButton.textContent = selectedOption;
+                });
+            });
+        });
+        
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <!-- Font Awesome icons for chat support icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</body>
+
+</html>
